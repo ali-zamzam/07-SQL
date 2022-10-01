@@ -1,0 +1,342 @@
+"""Introduction to tables and databases"""
+
+
+"""Databases: DBMS and BDDr (Les bases de données : SGBD et BDDr)"""
+
+"""
+A database management system (DBMS) is software that allows users to access a database. 
+This software manages differentiated access (identification, security) and interprets requests to 
+**ingest, modify, return or delete data**. There are two main families of DBMSs: **relational DBMSs and NoSQL DBMSs**.
+
+DBMSs can be associated with development environments (IDEs), software that contains text editors and SQL consoles to 
+write and execute SQL queries in a simplified way.
+
+The most commonly used DBMSs today are:
+- Post GreSQL
+- Microsoft SQL Server
+- mysql
+- Oracle Database
+
+These DBMS are used on IDEs such as DBeaver or Microsoft SQL SERVER Management Studio.
+"""
+
+"""
+Relational databases (BDDr) have been used since the 1970s, they are now the most popular and to some extent the easiest to use.
+These databases use tables to store data. These tables follow a strict schema that imposes constraints on the data structure.
+
+To interact with these DBMSs, SQL (Structured Query Language) is generally used to create queries on the databases. 
+SQL is widely used and fairly easy to use. It is therefore an essential language in the world of Data.
+"""
+# ------------------------------------------------------------------------------------------------
+"""schemas and tables"""
+
+"""
+- The tables used in databases are sets of records (or observations) that form the rows of the table. 
+Each of the values of a record corresponds to an attribute. The attributes form the columns of the table.
+
+- We can compare a table to an Excel table (or to a DataFrame), the records corresponding to the rows and the attributes 
+to the columns of the Excel table.
+
+- Tables are characterized by their schema. A table's schema must contain its attributes, their types, and the constraints
+ on those attributes. We can say that the schema is a definition or a "fingerprint" of the table.
+
+Let's take a look at the example of the Movies table together:"""
+
+
+# FilmId	    Name	                    Director
+#   1	        Bohemian Rhapsody	        Bryan Singer
+#   2	        Avengers : Infinity War	    Joe Russo & Anthony Russo
+#   3	        The Batman	                Matt Reeves
+
+"""
+Each record in the table corresponds to a movie. The columns of the table correspond to their characteristics:
+
+- FilmId: the unique identifier of the film (an integer).
+- Name: The name of the movie (a character string).
+- Director: the director (a character string).
+
+We have just defined the schema of this table: we have given the name and the type of each of the attributes of the table.
+
+
+**We will often refer to a table with its name followed by the name of its attributes in parentheses:**
+***************************************************************
+- films(FilmId, Name, Director)
+- this representation is called **the formal representation** of the table.
+(representation formelle)
+***************************************************************
+"""
+# ------------------------------------------------------------------------------------------------
+"""1. Types of variables"""
+
+"""
+Attributes can take many types in SQL. According to the DBMS, the types can vary but we mainly find the following"""
+
+# Type SQL	  Type
+# INTEGER	  Integer
+# FLOAT	      Floating point number (decimal)
+# DOUBLE	  Double-precision float number
+# BOOLEAN	  Boolean value(True, False)
+# DATE	      Date
+# DATETIME	  Date and hour
+# VARCHAR	  String of characters
+
+"""example"""
+
+# (a) Give the schema and formal representation of the Sales table described below.
+
+
+# SaleId	   Item	       Sale Date	    Quantity	  Unit Price
+# 1	           pen	       2020-05-18	        2	        0.45
+# 2	           eraser	   2020-06-24	        1	        0.99
+# 3	           binder	   2020-09-05	        3	        2.49
+
+
+"Schéma"
+"""
+SaleId :  l'identifiant unique de la vente--> integer
+Item : nom de la produit à vendre --> VARCHAR
+Sale Date : les dates de vendre des articles --> date
+Quantity : la quatité des items vendus --> integer
+Price : le prix de la produit (item) --> float
+
+
+"représentation formelle"
+
+Sales(SaleId,Item,Sale Date,Quantity,Unit Price)
+"""
+# --------------------------------------------------------------------------------------------------------------------
+"""Transactions"""
+
+"""
+- A transaction is a sequence of operations requiring read or write access which is carried out via a database management system.
+- To guarantee the integrity of a database, it is necessary that these transactions are reliable.
+- One of the ways to ensure reliable transactions is to verify ACID properties, acronym for:
+
+- Atomicité (Atomicity): A transaction must be able to be performed in full or else it will be aborted. 
+If an operation of the transaction is refused, all the other operations of the transaction will also be refused.
+
+- Cohérence (Consistency): The initial state and the final state of the database must be consistent, i.e. 
+all the integrity constraints of the database must be respected following a transaction.
+
+- Isolation: A transaction must occur independently of transactions running at the same time. 
+Intermediate states of a transaction are hidden from others.
+
+- Durabilité (Durability): When a transaction is validated, its effects must be stored "hard" and therefore persist even in the 
+event of a system crash or power failure.
+
+Relational databases check ACID properties unlike NoSQL databases. Transactions are therefore not as reliable for the latter, but they can perform better on large databases."""
+# ------------------------------------------------------------------------------------------------------------------------
+"""Keys and Constraints"""
+
+"""Primary key"""
+
+# FilmId	    Name	                    Director
+#   1	        Bohemian Rhapsody	        Bryan Singer
+#   2	        Avengers : Infinity War	    Joe Russo & Anthony Russo
+#   3	        The Batman	                Matt Reeves
+
+"""
+- The FilmId attribute is an identifier that uniquely defines each of the lines.
+- We will say that this attribute defines the primary key of the Movies table.
+
+- The Name and Director attributes do not suffer from this constraint: films can have the same name or the same director.
+
+- To represent that the FilmId attribute is the primary key:
+
+films(FilmId, Name, Director) ** we put it first position
+
+
+**Important things to remember about primary keys:**
+
+- The primary key of a table is the data that uniquely identifies a record in the table.
+- It can be made up of one or more attributes (we will discuss this later with composite keys).
+- The primary key must always be filled in and must be unique in the table (two records cannot have the same primary key).
+"""
+
+
+"""b) Give the primary keys of the following tables:"""
+
+# Sales
+
+# SaleId	   Item	       Sale Date	    Quantity	  Unit Price
+# 1	           pen	       2020-05-18	        2	        0.45
+# 2	           eraser	   2020-06-24	        1	        0.99
+# 3	           binder	   2020-09-05	        3	        2.49
+
+# Transactions
+
+
+# ItemID	TransactionID	VisitorID	    Timestamp
+# 4000	356475	          599528	    1433222276276
+# 11117	315335	          599528	    1433193500981
+# 4000	381345	          552148	    1433193915008
+
+
+"""
+Sales(SaleId, Item, Sale Date, Quantity, Unit Price) clé primaire (SaleId)
+
+Transactions(TransactionID, ItemId, VisitorID, Timestamp) clé primaire (TransactionID)
+
+"""
+# ----------------------------------------------------------------------------------------------
+"""Foreign key"""
+
+
+"""Typically, relational databases contain multiple tables. 
+For example, the Actors tables can be found in the same database:"""
+
+# Actors
+
+# ActorId	Firstname	Lastname	CountryId
+# 1	            Rami	Malek	    1
+# 2	            Robert	Downey Jr.	2
+# 3	            Chris	Hemsworth	2
+
+# Countries :
+
+# CountryId	  Name
+# 1	          USA
+# 2	          Australia
+# 2	          France
+
+
+"""The formal representation of the Countries table is:
+
+Countries(CountryId, Name)"""
+
+"""We can notice that the Actors table contains the CountryId attribute which refers to the primary key of the Countries table.
+ This attribute is a foreign key to the Actors table. We represent the foreign key by a **(#)** in the formal representation 
+ of the table:
+ 
+Actors(ActorId, Firstname, Lastname, #CountryId)
+ """
+
+"""
+A foreign key identifies a column (or set of columns) of one table as a reference to a column of another 
+table (the referenced one). The referenced table column must be a primary key or part of a unique constraint. 
+Thus the foreign key constraint guarantees that each of the table values exists in the referenced table: 
+a table row cannot contain a set of values that do not exist in the referenced table.
+
+
+For example, it is not possible to add a Spanish actor to the Actors table because the record for the
+ CountryId column must exist in the Countries table.
+
+Here's the Casting table from the same database that matches actors to the movies they've starred in.
+"""
+
+# Casting
+
+# ActorId	FilmId	    Role
+# 1	         1	        Freddie Mercury
+# 2	         2	        Tony Stark
+# 3	         2	        Thor
+
+"""The Casting table is an attribution table: it links the Films and Actors tables."""
+
+
+"""
+c) Give the representation of the Casting table.
+d) Can we add the row (2, 4, Sherlock Holmes) to the Casting table? Why ?"""  # (2 for ActorId and 4 for filmId )
+
+
+# c) Casting(#ActorId, #FilmId, Role) ***we put (#) because the ActorId and FilmId are already primary keys in another tables
+
+# d) The answer is no. The FilmId column of the Casting table is a foreign key referring to the primary key
+# from the films table. Since there is no FilmId equal to 4 in the Films table, it is impossible to add
+# the line at the Casting table. You would first have to add the row (4, Sherlock Holmes, Guy Ritchie) to the Movies table.
+# ------------------------------------------------------------------------------------------------------------------------
+"""composite key (clé composite)"""
+
+"""
+A composite key is a key over several attributes. There are composite primary keys, for example an address: 
+for it to be unique, it is necessary to specify the number, the name of the street, the name of the city, 
+the postal code and the country. We could store all this information in a single variable but we would lose 
+the possibility of making requests by city or by street, for example.
+
+Going back to our Casting table, the primary key is neither FilmId (because there are several actors playing for the same movie),
+nor ActorId (because an actor can play in different movies).
+
+Thus the Casting primary key is the pair (FilmId, ActorId) which uniquely defines a tuple in this table. So we have :"""
+
+"""Casting(#ActorId, #FilmId, Role)"""
+
+
+"""The Books table lists books written by Sir Arthur Conan Doyle and published in several languages."""
+
+
+# StoryId	 Language	Title
+# 30	        en	    Cyprien Overbeck-Wells
+# 30	        fr	    Cyprien Overbeck-Wells
+# 31	        en	    The Red-Headed League
+# 31	        fr	    La Ligue des rouquins
+
+
+# e) What is the primary key of the Books table?
+
+"""
+The StoryId attribute is not unique in the Books table because translations of the same story have the same StoryId.
+The title is also not unique because the title can be the same for two books in different languages for the same work.
+The only way to uniquely define a book is therefore the pair (StoryId, Language).
+"""
+# --------------------------------------------------------------------------------------------------------------
+"""Constraints"""
+
+"""
+To modify a table, the constraints imposed on it must be respected. There are 4 types:
+
+- Domain constraint: It defines what value an attribute can take, i.e. the data type and restrictions on this type.
+
+- Key Constraint: Rows in a table cannot have the same primary key or have no primary key.
+
+- Table constraint: This is a constraint that generalizes the two previous ones. When creating a table, 
+we will add a constraint on the values that the attributes of the latter can take.
+
+- Referential integrity constraint: An attribute can only take as its value a value existing as a key (primary or not) 
+of another relation. It therefore prohibits the existence of a tuple which refers to a tuple that does not exist in another 
+table."""
+# --------------------------------------------------------------------------------------------------------------
+"""Relational schemas"""
+
+"""
+As we saw with foreign keys, tables can have relationships: this is called a relational schema. It can be a column 
+common to the 2 tables, or 2 separate columns linked by another table (attribution table).
+
+Rows in one table can therefore match rows in other tables by matching:
+
+- One to One: 1 row matches 1 other row from the other table.
+- One to Many: 1 row in one table corresponds to multiple rows in another table.
+- Many to Many: 1 row from one table can correspond to several rows from the other table and vice versa.
+By keeping the same database as before, we can build the Synopsis table which gives the summary of each film 
+in the Films table."""
+
+
+# SynopsisId	FilmId	 Synopsis
+# 1	                1	 songs
+# 2	                2	 explosions
+# 3	                3	 investigation
+
+
+"""
+f) What is the relationship between the Movies and Actors tables?
+g) What is the relationship between the Movies and Synopsis tables?
+h) What is the relationship between the Movies and Casting tables?"""
+
+# f) Several actors play in the same film and an actor can play in different films.
+# So it's a Many to Many relationship.
+# g) Each film corresponds to a summary and vice versa (we can notice that FilmId is a primary key of Synopsis).
+# So it's a One to One relationship.
+# h) Each film can correspond to several lines of the Casting table (all the lines corresponding to the film).
+# On the other hand, a row of the Casting table only corresponds to a single film. So it's a One to Many relationship.
+
+# ------------------------------------------------------------------------------------------------------------------------------
+"""Conclusion"""
+
+"""You now know what a relational database is and are familiar with its main characteristics.
+
+Here's what to remember from this lesson before moving on to the SQL Queries course:
+
+- The main characteristics of relational databases (schema, attributes, tuples, ACID properties).
+- Primary keys uniquely identify a tuple in a table.
+- Foreign keys are the primary keys of other tables.
+- Keys can be composite.
+- The main types of schemas between tables."""

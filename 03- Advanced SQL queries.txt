@@ -1,0 +1,313 @@
+"""When we join tables we frequently get columns with the same name, we can remove this ambiguity using the **AS** keyword when using SELECT."""
+# SELECT tracks.Name AS Titre, tracks.GenreId AS NumeroGenre, genres.Name AS NomGenre
+# FROM tracks
+# JOIN genres ON tracks.GenreId  =  genres.GenreId;
+
+"""The right join RIGHT JOIN is not available on SQLite, but to simulate it, it suffices to reverse the order of the tables 
+using the LEFT JOIN command."""
+
+"""for example to have an **average** or a **count**: these are the aggregation functions"""
+
+"""if we want to use AS"""
+# SELECT AVG(tracks.Milliseconds) AS "average duration" (between " ")
+# or averageduration (without space)
+# --------------------------------------------------------------------------------------------------------------------------------
+"""Jointures (Joins)
+
+The joins are used to stick together different tables having at least one attribute(column) in common or at least comparable.
+
+
+***La jointure interne (INNER JOIN)****
+
+- This type of join will make it possible to concatenate the tuples of the 2 tables if a condition is satisfied.
+- This condition can be of any type as long as it returns a boolean. This condition will often be the equality of 
+an attribute in common; a primary key for one and a foreign key for the other for example, the foreign key referring to 
+the primary key of the first table.
+- It is necessary to specify the attributes to use to perform the join. We use the keyword ON followed by the desired 
+equality after having filled in the tables in the INNER JOIN or simply JOIN, since the inner join is the one used by default.
+
+- This type of join is often discouraged because it can lead to the loss of many entries. On the other hand, 
+the inner join **does not produce** any **NaN**.
+"""
+# ------------------------------------------------------------------------------------------------------------------------
+
+"""
+***************
+the syntax ***tracks.GenreId*** instead of **GenreId** to designate the GenreId column of tracks avoids ambiguity with the column 
+of the same name in genres. ***When the columns do not have the same name as another column***, **this syntax is not mandatory**
+but recommended to remain clear in its code.
+***************
+"""
+
+"""
+- Example
+b) do an inner join using the **GenreId column**, **primary key** of the genres table and **foreign key** of the tracks table.
+"""
+
+# SELECT *
+# FROM tracks
+# JOIN genres ON tracks.GenreId = genres.GenreId;
+
+# or
+# SELECT *
+# From genres
+# JOIN tracks ON genres.GenreId = tracks.GenreId ;
+
+"""We can notice that the GenreId column is **present twice** in the table resulting from the join, moreover we kept following this join
+ information that we did not want here."""
+
+
+"""c) Using a projection and an inner join, display in a single table the columns tracks.Name, tracks.GenreId and genres.Name."""
+# SELECT tracks.Name, tracks.GenreId, genres.Name
+# FROM tracks
+# JOIN genres ON tracks.GenreId  =  genres.GenreId;
+
+"""When we join tables we frequently get columns with the same name, 
+we can remove this ambiguity using the **AS** keyword when using SELECT."""
+
+# ************************************************************************************************************************************************************
+"""d) Using a projection, an inner join and the AS keyword, display in a single table the renamed columns Title, GenreNumber and GenreName"""
+# SELECT tracks.Name AS Titre, tracks.GenreId AS NumeroGenre, genres.Name AS NomGenre
+# FROM tracks
+# JOIN genres ON tracks.GenreId  =  genres.GenreId;
+
+
+"""e) Display in the same table the title of the albums of the albums table with the name of the associated artist who is listed 
+in the artists table."""
+# SELECT albums.Title, artists.Name
+# FROM albums
+# JOIN artists ON albums.ArtistId = artists.ArtistId;
+
+# -----------------------------------------------------------------------------------------------------------------------------------------
+"""La jointure à droite/gauche ou RIGHT JOIN / LEFT JOIN"""
+
+"""
+- The RIGHT JOIN is a join between 2 tables which allows to return all the records of the right table 
+even if there is no correspondence with the left table. If there is no match, the missing values are set to NULL or None.
+
+- The LEFT JOIN is a join between 2 tables which allows to return all the records of the left table 
+even if there is no correspondence with the right table. If there is no match, the missing values are set to NULL or None."""
+
+
+"""f) Using a left join, display the composers in the artists table whose composer is exactly an artist
+ in the tracks table, or None as the case may be. We will remove the lines where the artist from the tracks table is not specified."""
+##( because we said display composers in artists table (so we do FROM tracks))##
+
+# SELECT tracks.Composer, tracks.Name AS Song, artists.Name
+# FROM tracks
+# LEFT JOIN artists ON tracks.Composer = artists.Name
+# WHERE tracks.Composer IS NOT NULL;
+
+
+"""g) Using a left join, display the titles of tracks for which an artist of artists participated in the 
+composition and None otherwise. Be careful, there are sometimes several artists who have worked on the conception of the same music;"""
+
+# SELECT tracks.Name AS Song, tracks.Composer, artists.Name
+# FROM artists
+# LEFT JOIN tracks ON tracks.Composer LIKE ('%' || artists.Name || '%');
+
+# ******************************************
+# We can use the notation table1.words LIKE ('%' || table2.word || '%'). The || operator allowing to concatenate
+# character strings, and as % always allows to specify that the sequence which follows or which precedes can be any,
+# one considers as well all the cases of figure where the word table2.word appears in the sequence table1.words,
+# ******************************************
+
+
+"""h) En simulant une jointure à droite à l'aide d'une jointure à gauche, afficher les compositeurs pour les 
+lignes de la table tracks ayant exactement pour compositeur un artiste de la table artists, ou None le cas échéant."""
+
+# SELECT tracks.Composer, artists.Name, tracks.Name AS song
+# FROM tracks
+# LEFT JOIN artists ON  tracks.Composer = artists.Name;
+
+# ----------------------------------------------------------------------------------------------------------------
+"""The OUTER JOIN
+The outer join or OUTER JOIN is a join between 2 tables which makes it possible to return all the records 
+of the 2 tables even if there is no correspondence between the two. If there is no match, the missing values are set to NULL."""
+# ************************************
+# La jointure externe OUTER JOIN n'est pas disponible sur SQLite, nous détaillons ci-dessus le processus pour la simuler.
+# ************************************
+
+"""The outer join is just a combination of a LEFT JOIN and a RIGHT JOIN. We must therefore perform these 
+two operations and join the 2 resulting tables using the **UNION** keyword.
+
+i) By simulating an outer join, retrieve a table presenting in a unique way all the artists present in 
+the artists and tracks tables (with the corresponding music). We will remove the lines where the artist from 
+the tracks table is not specified."""
+# SELECT tracks.Composer, tracks.Name AS Song, artists.Name
+# FROM artists
+# LEFT JOIN tracks ON tracks.Composer = artists.Name
+# WHERE tracks.Composer IS NOT NULL
+# UNION
+# SELECT tracks.Composer, tracks.Name AS Song, artists.Name
+# FROM tracks
+# LEFT JOIN artists ON tracks.Composer = artists.Name
+# WHERE tracks.Composer IS NOT NULL;
+
+# -----------------------------------------------------------------------------------------------------------
+"""Les jointures exotiques(Exotic Joins)"""
+
+
+"""You can also make joins on queries, for example another join: this is called a nested join. 
+This makes it possible to join 3 or more tables!
+The syntax is as follows:"""
+# SELECT table1.colonne1, a.colonne1 ...
+# FROM table1
+# JOIN (SELECT ...
+#     FROM table2
+#     JOIN table3 ON ...) AS a
+# ON ...;
+
+# SELECT tracks.Name AS 'Musique', a.Title AS 'Album', a.Name AS 'Artiste'
+# FROM tracks
+# JOIN (SELECT *
+#     FROM albums
+#     JOIN artists ON artists.ArtistId = albums.ArtistId) AS a
+# ON tracks.AlbumId = a.AlbumId;
+# ---------------------------------------------------------------------------------------------------------
+"""auto-jointure (self join)"""
+
+"""In the case where a table provides access to related information with entries from the same table, 
+it may be useful to join the table with itself. This is called a self-join, the syntax remains the same 
+but we need the alias to disambiguate!"""
+
+# For example, if we want to use the employees table to group the information of an employee with his hierarchical
+# superior (contained in the ReportsTo column) we will use the following syntax:
+
+# SELECT a.LastName, a.FirstName, a.Title, a.ReportsTo, e.LastName, e.FirstName, e.Title
+# FROM employees AS a
+# JOIN employees AS e ON a.ReportsTo = e.EmployeeId;
+
+# ---------------------------------------------------------------------------------------------------------
+"""Les fonctions d'aggrégation(Aggregation functions)"""
+
+"""So far, operations have only been carried out line by line. You can also perform operations on several lines, 
+for example an average or a count: these are the aggregation functions. The most classic are:"""
+
+
+"""k) Count the number of songs recorded in the tracks table"""
+# SELECT COUNT(tracks.TrackId)
+# FROM tracks;
+
+"""l) Display the average duration of a piece of music from the tracks table, using the Milliseconds column"""
+# SELECT AVG(tracks.Milliseconds) AS "average duration"
+# FROM tracks;
+
+# ------------------------------------------------------------------------------------------
+"""Regroupement """
+
+"""To obtain results by category and not only on an entire table, it is possible to apply aggregation functions by grouping according to one or 
+more attributes using the GROUP BY keyword. The syntax is as follows:"""
+
+# SELECT column1, f(column2)
+# FROM table1
+# GROUP BY column1;
+
+
+"""m) Display the number of albums by artist using the albums table, and the keywords COUNT and GROUP BY."""
+# SELECT ArtistId, COUNT(AlbumId) as Albums
+# FROM albums
+# GROUP BY ArtistId;
+
+
+"""n) With an inner join, replace the ArtistId column of the previous query with the name of the artists using the artists table, we will also display the number of albums per artist."""
+# SELECT Name, Albums
+# FROM artists
+# JOIN (SELECT ArtistId,  COUNT(AlbumId) AS Albums
+#     FROM albums
+#     GROUP BY ArtistId) AS a
+# ON artists.ArtistId = a.ArtistId;
+
+
+"""On peut également grouper selon plusieurs colonnes, et appliquer plusieurs fonctions avec la syntaxe :
+
+SELECT colonne1, ..., colonneN, f(colonneA), ..., f(colonneZ) 
+FROM table1
+GROUP BY colonne1, ..., colonneN;"""
+
+"""o) Display the total duration and the number of songs of each album by artist, we will need the tracks, artists and albums tables, and therefore a nested join."""
+# SELECT NomArtiste, NomAlbum, SUM(Milliseconds) AS DureeAlbum, COUNT(b.Name) AS NbMusiques
+# FROM (SELECT tracks.Name, Milliseconds, a.Title AS NomAlbum, a.Name AS NomArtiste
+#     FROM tracks
+#     JOIN (SELECT *
+#         FROM albums
+#         JOIN artists ON albums.ArtistId = artists.ArtistId) AS a
+#     ON tracks.AlbumId = a.AlbumId) AS b
+# GROUP BY NomArtiste, NomAlbum;
+
+# or
+# SELECT Name AS NomArtiste, NomAlbum, DureeAlbum, NbMusiques
+# FROM artists
+# JOIN (SELECT ArtistId, Title AS NomAlbum, SUM(Milliseconds) AS DureeAlbum, COUNT(Name) AS NbMusiques
+#     FROM tracks
+#     JOIN albums ON tracks.AlbumId = albums.AlbumId
+#     GROUP BY NomAlbum, ArtistId) AS a
+# ON artists.ArtistId = a.ArtistId;
+# ----------------------------------------------------------------------------------------------------------------
+"""source selection(upstream"""
+"""On peut associer au regroupement des sélections. La sélection en amont concerne des conditions sur la table avant regroupement. 
+Elle se fait comme une sélection classique avec le mot-clé WHERE, ici utilisé avant le GROUP BY:"""
+# SELECT colonne1, f(colonne2)
+# FROM table1
+# WHERE condition(table1)
+# GROUP BY colonne1;
+
+
+"""p) Display the number of tracks over 400 seconds by AlbumId using the tracks table."""
+# SELECT AlbumId, COUNT(AlbumId) AS MusiquesLongues
+# FROM tracks
+# WHERE Milliseconds > 400000
+# GROUP BY AlbumId;
+
+"""q) Display the number of tracks longer than 400 seconds by album name using an inner join between the tracks and albums tables."""
+# SELECT Title, NbMusiquesLongues AS MusiquesLongues
+# FROM albums
+# JOIN (SELECT AlbumId, COUNT(Name) AS NbMusiquesLongues
+#     FROM tracks
+#     WHERE Milliseconds > 400000
+#     GROUP BY AlbumId) AS a
+# ON albums.AlbumId = a.AlbumId;
+# ----------------------------------------------------------------------------------------------------------------
+"""Downstream selection"""
+
+"""Downstream selection is for conditions on the table after grouping. It is done with the HAVING keyword used after the GROUP BY. The HAVING keyword allows 
+you to select using functions such as SUM(), COUNT(), AVG()...
+
+SELECT column1, f(column2)
+FROM table1
+GROUP BY column1
+HAVING condition;
+The condition relates to the query before the HAVING, i.e. to the result of: SELECT column1, f(column2) FROM table1 GROUP BY column1"""
+
+"""r) Display albums which are not singles (i.e. which have at least 2 tracks), by AlbumId using the tracks table."""
+# SELECT albums.AlbumId, NbMusiques, Title
+# FROM albums
+# JOIN (SELECT AlbumId,COUNT(AlbumId) AS NbMusiques
+# FROM tracks
+# GROUP BY  AlbumId
+# HAVING NbMusiques >= 2) as a
+# ON albums.AlbumId = a.AlbumId;
+
+"""s) Display albums that are not singles using an inner join between the tracks and albums tables."""
+# SELECT Title AS NomAlbum, COUNT(tracks.AlbumId) AS NbMusiques, Name
+# FROM tracks
+# JOIN albums ON tracks.AlbumId = albums.AlbumId
+# GROUP BY NomAlbum
+# HAVING NbMusiques >= 2;
+
+# ------------------------------------------------------------------------------------------------
+"""Conclusion 
+
+Nous avons appris dans ce cours comment faire des requêtes SQL avancées pour interroger une base de données.
+
+Voici les principales opérations à retenir de ce cours :
+
+La jointure interne :
+SELECT * 
+FROM table1 
+JOIN table2 ON table1.colonne1 = table2.colonne2;
+Les regroupements avec fonctions d'aggrégation :
+SELECT colonne1, f(colonne2) 
+FROM table1 
+GROUP BY colonne1;
+Les principales fonctions d'aggrégation : COUNT, SUM, AVG, MIN, MAX."""

@@ -1,0 +1,50 @@
+https://www.sqlitetutorial.net/download-install-sqlite/
+
+
+To import and create a data base
+**we need to search the database on google and we must did:**
+
+examples:
+chinook database
+
+https://database.guide/2-sample-databases-sqlite/
+
+****we click on (Chinook_Sqlite.sql) and we copy it in SQL (inside txt we click save as filename.sql) file and we 
+put it in a folder on ( sqlite C:)****
+*******as (chinook.sql)*****
+
+********************
+first we need to open this site (https://www.sqlite.org/download.html)
+download the version (sqlite-tools-win32-x86-3390300.zip
+(1.88 MiB)		A bundle of command-line tools for managing SQLite database files, including the command-line shell program, 
+the sqldiff.exe program, and the sqlite3_analyzer.exe program.)
+
+create a folder (sqlite on C:)
+
+- extracte the folder sqlite-tools in the (sqlite folder on C:)
+
+- Second, type sqlite3 and press enter, you should see the following output:
+
+C:\sqlite>sqlite3
+SQLite version 3.29.0 2019-07-10 17:32:03
+Enter ".help" for usage hints.
+Connected to a transient in-memory database.
+Use ".open FILENAME" to reopen on a persistent database.
+sqlite>
+
+we use .quit to exit
+********************
+
+"""we enter on command prompt(shell) to the folder (sqlite on C:/) that have (Chinook_Sqlite.sql)"""
+
+**we type sqlite3 chinook.db**
+
+download sqlite on windows
+
+and create the database
+
+--------------------------------------------------------------------------------------------------------------------
+
+******To use Microsoft SQL We need do download the databasefile.bak ***************
+
+--------------------------------------------------------------------------------------------------------------------

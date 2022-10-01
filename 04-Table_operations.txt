@@ -1,0 +1,189 @@
+"""Table operations"""
+
+"""
+**populate a database by creating, modifying and deleting tables.***
+
+- It is possible that errors occur in this module since you will create, modify and delete elements of a database, 
+resetting the kernel will not be enough to reinitialize the base. If a problem occurs, the easiest way is to delete the tables 
+that you have created and which are causing problems with the command ***DROP TABLE IF EXISTS name_table;*** and then 
+refer to the correction cells.
+"""
+# ------------------------------------------------------------------------------------------------
+"""Tables creation"""
+
+"""
+- Table creation is done using the **CREATE TABLE** keyword followed by the **table name**. 
+- Then **in the parentheses**, we specify the **name of the columns** as well as their type and constraints 
+if we want to add them. 
+- Finally,**we specify the primary and foreign keys.**"""
+
+"""In the newly created input area, execute the following SQL command to create the parcours table which will contain 
+the different courses offered by the establishment, describing them using an id and a name.
+"""
+# CREATE TABLE table_name (
+#     id INTEGER NOT NULL,
+#     name VARCHAR,
+#     PRIMARY KEY(id));
+
+"""The NOT NULL constraint after the id attribute means that this attribute must always be filled in the 
+table (because it is an identifier)."""
+
+"""***If you want to verify that the table has been created in the database you can use the query SELECT * FROM browse;***"""
+# SELECT *
+# FROM parcours;
+
+
+"""
+- Create a students table that will identify students within the university. The attributes of this table will 
+be the student's id, firstname firstname, lastname lastname, as well as the path_id identifier of the path followed.
+
+We can specify the primary key using the keyword PRIMARY KEY, as well as the foreign key with FOREIGN KEY followed 
+by the name of the foreign key then the keyword REFERENCES followed by the name of the reference table and the name 
+of the foreign key in this table.
+"""
+# CREATE TABLE students (
+#   id INTEGER NOT NULL,
+#   firstname VARCHAR,
+#   lastname VARCHAR,
+#   parcours_id INTEGER,
+#   PRIMARY KEY (id),
+#   FOREIGN KEY (parcours_id) REFERENCES parcours(id));
+# ----------------------------------------------------------------------------------------------------------
+"""Adding Constraints"""
+
+"""When we create a table, we cannot always specify the constraints, for example the primary keys or foreign keys, 
+at the very moment of its creation. Fortunately there are commands to add them later.
+
+# If you did not specify the foreign key in the students table, you could run the following code:"""
+
+# ALTER TABLE students
+# ADD CONSTRAINT FK_parcours_id
+# FOREIGN KEY (parcours_id) REFERENCES path (id);
+
+"""
+- In SQLite, the ADD CONSTRAINT method of ALTER TABLE is not available, so a temporary table must be used to make the changes. 
+
+# The previous command is broken down into 3 parts:
+
+- The ALTER TABLE keyword is used to specify the name of the table on which to add the constraint.
+- The ADD CONSTRAINT keyword is used to choose the name of the constraint.
+- The constraint syntax.
+
+# Here is a non-exhaustive list of constraints used in SQL, as well as the syntax associated with each of them:"""
+
+#   Constraint                  Syntax
+#   Primary key           PRIMARY KEY (primary_key_name)
+#   Foreign key           FOREIGN KEY (key_name) REFERENCES foreign_table (foreign_table_key_name)
+#   Check condition       CHECK (condition)
+#   Uniqueness            UNIQUE (column_name)
+# ----------------------------------------------------------------------------------------------
+"""Inserting rows"""
+
+
+"""Row insertions into a database table are transactions and therefore check the database consistency rules 
+(the ACID properties, presented in the 1st notebook). The general syntax for inserting rows into a table in SQL is:"""
+# INSERT INTO nom_table
+# VALUES
+#     tuple1,
+#     tuple2,
+#     ...
+#     ...,
+#     tupleN;
+
+"""Insert the rows corresponding to paths (1, "Data Engineering") and (2, "Data Science") in the path table."""
+# INSERT INTO parcours
+# VALUES
+#     (1, "Data Engineering"),
+#     (2, "Data Science");
+
+"""In the same way, add to the students table the new students 'Jean Dubois' in 'Data Engineering' 
+and 'Martin Dupont' in 'Data Science'. Consider using the table's primary and foreign keys."""
+# INSERT INTO students
+# VALUES
+#     (1, "Jean", "Dubois", 1),
+#     (2, "Martin", "Dupont", 2);
+
+# -----------------------------------------------------------------------------------------------------------
+"""Deleting rows"""
+
+"""In the same way that we can insert rows, we will be able to delete rows in a database thanks to the SQL language 
+thanks to the following syntax."""
+# DELETE FROM nom_table
+# WHERE colonne = valeur;
+
+
+"""The student 'Jean Dubois' has just unsubscribed from the establishment. Delete it from the students table."""
+# DELETE FROM students
+# WHERE id=1;
+
+
+"""Try removing the Data Science row from the Path table. Why is this not possible?"""
+# DELETE FROM parcours
+# WHERE id=2;
+# cannot delete this course because the students table refers to this course line by a foreign key
+# ------------------------------------------------------------------------------------------------
+"""Rows modification"""
+
+"""The last row operation used in SQL is modification. This can happen when an error has been inserted on an attribute 
+of a line. We modify one (or more) line(s) using the UPDATE and SET keywords and the following syntax:"""
+# UPDATE table_name
+# SET colonne1 = nouvelle_valeur
+# WHERE colonne2 = valeur_ancienne;
+"""On modifie ici la colonne1 avec la nouvelle_valeur pour toutes les lignes dont la colonne2 vaut valeur_ancienne."""
+
+
+"""The principal made a typing error for student ID 2 in the students table. Change its name to 'Durand' instead of 'Dupont'."""
+# UPDATE students
+# SET lastname = 'Durand'
+# WHERE id = 2;
+
+"""Several modifications can be made on the same line(s) at the same time by separating them with a comma."""
+
+""" The student's name is 'Dupont', but his first name is 'Marin' and not 'Martin', help him find his name."""
+# UPDATE students
+# SET lastname = 'Dupont', firstname = 'Marin'
+# WHERE id = 2;
+# ------------------------------------------------------------------------------------------------
+"""Table deletion"""
+
+"""Finally, we can drop tables from a database. To do this, and if you have not had any errors so far, the syntax to use 
+is as follows:"""
+
+"""DROP TABLE IF EXISTS table_name;"""
+
+"""k) Delete the students tables and then browse."""
+# If you drop the course table first, while the students table depends on it through its primary key, it won't work.
+# DROP TABLE IF EXISTS students
+# DROP TABLE IF EXISTS parcours
+# ------------------------------------------------------------------------------------------------------------
+"""Conclusion """
+
+# Vous avez appris à manipuler directement les tables d'une base, voici les principales commandes à retenir :
+
+"""Pour créer une table :"""
+# CREATE TABLE table (
+#   col1 TYPE1 CONTRAINTE1,
+#   col2 TYPE2, PRIMARY KEY (col1));
+
+"""Pour ajouter une contrainte :"""
+# ALTER TABLE table
+# ADD CONSTRAINT nom_contrainte
+# CODE(contrainte);
+
+"""Pour insérer de nouvelles lignes :"""
+# INSERT INTO table
+# VALUES tuple1, tuple2;
+
+"""Pour supprimer des lignes :"""
+# DELETE FROM table
+# WHERE col1 = valeur;
+
+
+"""Pour modifier des lignes :"""
+# UPDATE table
+# SET col1 = valeur1
+# WHERE col2 = val2;
+
+
+"""Pour supprimer des lignes :"""
+# DROP TABLE IF EXISTS table;

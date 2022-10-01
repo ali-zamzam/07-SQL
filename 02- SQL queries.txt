@@ -1,0 +1,270 @@
+"""
+SELECT 
+From 
+WHERE 
+ORDER BY ;
+"""
+# ----------------------------------------------------------------------------------------------
+"""Operators for conditions
+To build the conditions, we mainly find in SQL the following operators:
+"""
+
+
+# Operator          Description
+#   =                 Equal
+#   <>                Not equal
+#   >                 Greater than
+#   <                 Less than
+#   >=                Greater than or equal to
+#   <=                Less than or equal to
+#   IN                List of several possible values
+#   BETWEEN           Value included in a given interval (useful for numbers or dates)
+#   LIKE              Search by specifying the beginning, middle or end of a word
+#   IS NULL           Value is null
+#   IS NOT NULL       Value is not null
+
+# ************************************************************************************************
+# It is also possible to combine several conditions thanks to the keywords **(AND, OR and NOT)**.
+
+# example:
+# SELECT *
+# FROM employees
+# WHERE City=  'Edmonton' OR  City=  'Lethbridge' ;
+# *************************************************************************************************
+
+# ------------------------------------------------------------------------------------------------------------------------------
+
+"""Regular Expressions"""
+
+"character strings that describe, according to a precise syntax, a set of possible characters"
+
+# Regular expression             Description
+
+# %                              matches any combination of characters of any size
+# _                              matches any single character
+# +                              matches at least one instance of the previous expression
+# ^                              matches a start at the beginning of a line
+# $                              search at end of line
+# <                              match only if the word starts at this point
+# >                              match only if the word ends in this dot
+# \n                             match if there is a newline
+# [ ]                            matches if any of the characters between square brackets are present
+# [^...]                         matches any character not listed after ^
+# [ABQ]%                         string must start with an A , B or Q and can be any length
+# [AB][CD]%                      string must start with an A or B and the second character must be C or D and can be any length
+# [A-Z]%                         string must start with an A-Z character and can be any length
+# [A-Z0-9]%                      string must start with a letter A-Z or a number 0-9 and can be any length
+# [^A-C]%                        string cannot start with a character from A to C but can be of any length
+# %[A-Z]                         the character string must end with a character from A to Z and can be of any length
+# %[%$#@]%                       string can be any length and must match at least one character in square brackets
+# --------------------------------------------------------------------------------------------------------------------------------
+"""Projection"""
+
+"""Projection is the fundamental query in SQL. It consists of displaying certain columns of a table using the SELECT keyword.
+
+- To display a table completely, you can select all the columns with the asterisk (*).
+- We then specify the name of the table using the **FROM** keyword.
+- We will get into the habit of returning to the line after each command, and of marking the end of the request with the symbol;.
+"""
+
+# The request will therefore take this form:
+""" 
+SELECT *
+FROM table;
+"""
+# ------------------------------------------------------------------------------------------------------------
+"""a) display all the columns of the albums table using an SQL query."""
+
+# SELECT *
+# FROM albums;
+
+
+"""
+***************                                                                                    ******************
+To display only **certain columns** of a table, write the names of the chosen columns after the SELECT, separating them with a comma.
+***************                                                                                    ******************
+"""
+
+"""b)Show the AlbumId and ArtistId columns of the albums table."""
+
+# SELECT AlbumId,ArtistId
+# FROM albums;
+
+"""
+***************
+To avoid **repetitions** in a projection, one can use the ***DISTINCT*** keyword before the column names.
+***************
+"""
+
+"""
+c) Display all distinct ArtistIds from the albums table.
+"""
+# SELECT DISTINCT ArtistId
+# FROM albums;
+
+"""
+d) Display the last name, first name and position of chinookcorp employees, contained in the employees table. 
+It will be necessary to identify the corresponding columns.
+"""
+# SELECT FirstName, LastName, Title
+# FROM employees
+
+# --------------------------------------------------------------------------------------------------------------------------------
+"""Simple selection"""
+
+"""Simple selection consists of choosing elements from a table satisfying a certain condition. 
+The SELECT command associated with the **WHERE** keyword is used to impose the condition(s). 
+"""
+
+"""The general syntax is as follows:"""
+# SELECT column1, column2
+# FROM table1
+# WHERE condition;
+
+
+"""a) Display local employees in 'Calgary'."""
+# SELECT *
+# FROM employees
+# WHERE City= 'Calgary';
+
+
+"""b) Display employees living in 'Edmonton' or 'Lethbridge'."""
+# SELECT *
+# FROM employees
+# WHERE City=  'Edmonton' OR  City=  'Lethbridge' ;
+
+
+"""c)Display the last name, first name and position of employees with a supervisor(the ReportsTo column contains the Id of the employee's supervisor)."""
+# SELECT FirstName, LastName,Title
+# FROM employees
+# WHERE ReportsTo IS NOT NULL;
+
+"""d) Display employees whose ID is less than 5 inclusive."""
+# SELECT *
+# FROM employees
+# WHERE EmployeeId <= 5;
+
+
+"""e) Display employees whose identifier is between 2 and 7 inclusive."""
+# SELECT *
+# FROM employees
+# WHERE EmployeeId BETWEEN 2 AND 7;
+
+# or
+# SELECT *
+# FROM employees
+# WHERE EmployeeId >= 2 AND EmployeeId <= 7;
+
+"""f) Show employees born before May 10, 1973, pay attention to the date format."""
+# SELECT *
+# FROM employees
+# WHERE BirthDate <= '1973-05-10';
+# ------------------------------------------------------------------------------------------------
+"""Regular Expressions"""
+
+"character strings that describe, according to a precise syntax, a set of possible characters"
+
+
+"""g) Display data for titles beginning with P."""
+# SELECT *
+# FROM tracks
+# WHERE Name LIKE "P%";
+
+"""Display data for titles end with P."""
+# SELECT *
+# FROM tracks
+# WHERE Name LIKE "%P";
+
+"""Display data for titles had P in it."""
+# SELECT *
+# FROM tracks
+# WHERE Name LIKE "%P%";
+
+
+"""h) Display 3 character title data. We can use"""
+# SELECT *
+# FROM tracks
+# WHERE Name LIKE "___";
+
+
+"""i) Display titles less than 5 characters."""
+# SELECT *
+# FROM tracks
+# WHERE Name NOT LIKE "_____%";
+
+
+"""j) Display titles composed by 'Jimi Hendrix'. Attention, depending on the albums, the first name and the last name can be reversed."""
+# SELECT *
+# FROM tracks
+# WHERE Composer LIKE '%Jimi%' AND Composer LIKE '%Hendrix%'
+
+
+"""k) Display music from an artists' association.
+Hint: For an artists' association, the name is separated by a / or - with the exception of the AC/DC group."""
+
+# SELECT Name, Composer
+# FROM tracks
+# WHERE (Composer LIKE '%/%' AND Composer NOT LIKE '__/__') OR Composer LIKE '%-%';
+
+# ----------------------------------------------------------------------------------------------------------------------------
+"""Tri des données (Data sorting)"""
+
+"""It is possible to sort in ascending order the results of a query according to the values of a column by using 
+the keyword ORDER BY with ***ASC*** (by default), or ***DESC ***to sort in descending order.
+
+Address the following questions using the tracks table.
+"""
+
+
+"""******** The ****LIMIT**** keyword allows you to choose the number of results to display.*********"""
+
+
+"""l) Sort the music titles in alphabetical order, we will limit ourselves to the first 10."""
+# SELECT Name
+# FROM tracks
+# ORDER BY Name ASC LIMIT 10;
+
+# or
+# SELECT Name
+# FROM tracks
+# ORDER BY Name LIMIT 10;
+
+# descending order#
+# SELECT Name
+# FROM tracks
+# ORDER BY Name DESC LIMIT 10;
+
+
+"""l) Display AC/DC titles in alphabetical order."""
+# SELECT Name, Composer
+# From tracks
+# WHERE Composer LIKE "%AC/DC%"
+# ORDER BY Name;
+
+
+"""m) Display the 5 longest titles of the tracks table as well as their duration.
+We can use the Milliseconds column."""
+# SELECT Name, Milliseconds
+# FROM tracks
+# ORDER BY Milliseconds DESC LIMIT 5;
+
+# ------------------------------------------------------------------------------------------------
+"""
+Here are the main things to remember:
+
+Projection :
+SELECT col1, col2
+FROM table;
+
+Simple selection:
+SELECT *
+FROM table
+WHERE condition;
+
+Operators for conditions and regular expressions with LIKE.
+
+Sorting:
+SELECT *
+FROM table
+ORDER BY col ASC;
+"""
